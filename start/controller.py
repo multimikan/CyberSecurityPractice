@@ -2,7 +2,6 @@ import game_controller
 class Controller(game_controller.Controller):
     def __init__(self):
         super().__init__()
-
         
     def getChoicePlots(self): #generator
         _i = 0

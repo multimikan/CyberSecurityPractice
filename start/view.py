@@ -8,6 +8,7 @@ class View():
 
     def view(self):
         while self.controller.getIsActive():
-            plot = ("操作方法：wasd, z:enter, x:back","ゲームタイトル画面","","","選択してください",next(self.choice),next(self.choice))
-            c.my_print(plot)
+            plot = ("ゲームタイトル画面","","","選択してください",next(self.choice),next(self.choice))
+            c.my_print(plot,footer="操作方法：wasd, z:enter, x:back")
             self.controller.input_controller()
+            print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
