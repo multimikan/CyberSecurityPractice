@@ -2,13 +2,25 @@ import component as c
 import start.controller as controller
 
 class View():
-    def __init__(self):
+    def __init__(self,main_controller):
         self.controller = controller.Controller()
-        self.choice = self.controller.getChoicePlots()#generator
+        self.main_controller = main_controller
+        self.selecting = 0
+    
+    def setup(self):
+        self.selecting = self.main_controller.getSelecting()
+        if self.input_controller(self.main_controller.getSelecting()) == 1:
 
     def view(self):
-        while self.controller.getIsActive():
-            plot = ("ゲームタイトル画面","","","選択してください",next(self.choice),next(self.choice))
-            c.my_print(plot,footer="操作方法：wasd, z:enter, x:back")
-            self.controller.input_controller()
-            print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+        return (
+            c.e_box(
+                c.text("Pocket Monster for Python"),
+            ),
+            c.padding(5),
+            c.text("Please, Select"),
+            c.e_box(
+                c.selector(["START","EXIT"],self.selecting),
+                witdh=15
+            ),
+            c.padding()
+        )
