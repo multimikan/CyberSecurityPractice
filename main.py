@@ -3,12 +3,10 @@ import random
 import os
 import sys
 
-# --- 定数設定 ---
 TYPE_FIRE = "ほのお"
 TYPE_WATER = "みず"
 TYPE_GRASS = "くさ"
 
-# タイプ相性表 (攻撃側: 強い相手)
 TYPE_CHART = {
     TYPE_FIRE: TYPE_GRASS,
     TYPE_WATER: TYPE_FIRE,
@@ -16,11 +14,9 @@ TYPE_CHART = {
 }
 
 def clear_screen():
-    """画面をクリアする"""
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def slow_print(text, delay=0.03):
-    """RPG風に文字を少しずつ表示する"""
     for char in text:
         sys.stdout.write(char)
         sys.stdout.flush()
@@ -28,7 +24,6 @@ def slow_print(text, delay=0.03):
     print()
 
 def draw_bar(current, max_val, length=20, color_char="#"):
-    """HPバーを描画する"""
     ratio = current / max_val
     filled_len = int(length * ratio)
     bar = color_char * filled_len + "-" * (length - filled_len)
@@ -59,12 +54,10 @@ class Pokemon:
         slow_print(f"\n⚔️  {self.name} の こうげき！")
         time.sleep(0.5)
 
-        # ダメージ計算（乱数幅を持たせる）
         base_damage = self.attack_power + random.randint(-5, 5)
         multiplier = 1.0
         message = ""
 
-        # タイプ相性計算
         if TYPE_CHART.get(self.type) == target.type:
             multiplier = 2.0
             message = "🎯 こうかは ばつぐんだ！"
@@ -107,9 +100,9 @@ def select_pokemon():
         Pokemon("フシギダネ", TYPE_GRASS, 120, 16)
     ]
 
-    print("1. ヒトカゲ   (タイプ: ほのお, 攻撃重視)")
-    print("2. ゼニガメ   (タイプ: みず,   バランス)")
-    print("3. フシギダネ (タイプ: くさ,   体力重視)")
+    print("1. ヒトカゲ   (タイプ: ほのお)")
+    print("2. ゼニガメ   (タイプ: みず)")
+    print("3. フシギダネ (タイプ: くさ)")
 
     while True:
         choice = input("\n>> 番号を入力してください (1-3): ")
@@ -130,7 +123,7 @@ def battle_scene(player_poke, enemy_poke):
     time.sleep(1)
 
     while True:
-        # --- 画面描画 ---
+
         clear_screen()
         print(f"🔻 敵: {enemy_poke.name} ({enemy_poke.type})")
         print(draw_bar(enemy_poke.current_hp, enemy_poke.max_hp))
@@ -139,7 +132,6 @@ def battle_scene(player_poke, enemy_poke):
         print(draw_bar(player_poke.current_hp, player_poke.max_hp))
         print("-" * 30)
 
-        # --- プレイヤーのターン ---
         print("\nどうする？")
         print("1. たたかう")
         print("2. かいふく (HP30回復)")
@@ -157,13 +149,11 @@ def battle_scene(player_poke, enemy_poke):
         else:
             continue # 無効な入力はスキップ
 
-        # 敵が倒れたか判定
         if enemy_poke.is_fainted():
             slow_print(f"\n🌟 {enemy_poke.name} は たおれた！")
             slow_print("   勝負に かった！")
             return "win"
 
-        # --- 敵のターン ---
         enemy_action = random.choice(["attack", "attack", "attack", "wait"]) # 3/4で攻撃
         if enemy_action == "attack":
             enemy_poke.attack(player_poke)
@@ -171,7 +161,6 @@ def battle_scene(player_poke, enemy_poke):
             slow_print(f"\n👀 {enemy_poke.name} は 様子をみている...")
             time.sleep(1)
 
-        # プレイヤーが倒れたか判定
         if player_poke.is_fainted():
             slow_print(f"\n💀 {player_poke.name} は たおれた...")
             slow_print("   目の前が まっくらに なった...")
@@ -181,20 +170,16 @@ def main():
     while True:
         show_start_screen()
         
-        # プレイヤーのポケモン選択
         player_mon = select_pokemon()
         
-        # 敵の生成（ライバル）
-        # プレイヤーに有利なタイプを出してあげる優しさ（あるいは逆も可）
         rival_idx = random.randint(0, 2)
         enemies = [
-            Pokemon("悪いヒトカゲ", TYPE_FIRE, 105, 20),
-            Pokemon("悪いゼニガメ", TYPE_WATER, 115, 17),
-            Pokemon("悪いフシギダネ", TYPE_GRASS, 125, 15)
+            Pokemon("ブースター", TYPE_FIRE, 105, 20),
+            Pokemon("シャワーズ", TYPE_WATER, 115, 17),
+            Pokemon("リーフィア", TYPE_GRASS, 125, 15)
         ]
         enemy_mon = enemies[rival_idx]
 
-        # バトル開始
         result = battle_scene(player_mon, enemy_mon)
         
         print("\n" + "="*30)
